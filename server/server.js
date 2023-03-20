@@ -10,10 +10,14 @@ const PORT = process.env.PORT || 3001;
 
 const server = new ApolloServer({ typeDefs, resolvers, context: authMiddleware});
 
-server.applyMiddleware({ app});
+server.applyMiddleware({ app });
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+const _dirname = path.dirname("");
+const buildPath = path.join(_dirname, "..client/build");
+app.use(express.static(buildPath));
 
 // if we're in production, serve client/build as static assets
 if (process.env.NODE_ENV === 'production') {
