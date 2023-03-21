@@ -7,16 +7,23 @@ import {
   Col
 } from 'react-bootstrap';
 import { useQuery, useMutation} from '@apollo/client';
-import { getMe, deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 import { REMOVE_BOOK } from '../utils/mutations';
-import { GET_ME } from '../../../../../../../example/Book-Search-Engine/client/src/utils/queries';
+import { GET_ME } from '../utils/queries';
 
 const SavedBooks = () => {
   const {loading, data } = useQuery(GET_ME);
-  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+  const [deleteBook] = useMutation(REMOVE_BOOK);
   const userData = data?.me || {};
+
+  if(!userData?.username) {
+    return (
+      <h4>
+        You need to be logged in to see this page. Use the navigation links above to sign up or log in!
+      </h4>
+    );
+  }
 
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
@@ -28,8 +35,16 @@ const SavedBooks = () => {
     }
 
     try {
-      const { data } = await removeBook({
-        variables: {bookId},
+      await deleteBook({
+        variables: {bookId: bookId},
+        update: cache => {
+          const data = cache.readQuery({ query: GET_ME});
+          const userDataCache = data.me;
+          const savedBooksCache = userDataCache.savedBooks;
+          const updatedBookCache = savedBooksCache.filter((book) => book.bookId !== bookId);
+          data.me.savedBooks = updatedBookCache;
+          cache.writeQuery({ query: GET_ME, data: {data: {...data.me.savedBooks}}})
+        }
       });
       removeBookId(bookId);
     } catch (err) {
