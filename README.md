@@ -22,7 +22,12 @@ SO THAT I can keep a list of books to purchase
   
 
   ## Installation
-    View on browser via Launched Link.
+ To use this app npm init has to be called to create your package.json file.
+ The following necessary Npm dependencies must be installed to run the application properly: the needed dependencies will be found on the package.json file.
+ To properly install the database you must create at cluster on Mongodb atlas.
+ Run "npm start" for the port to start listening with mongoose.
+ <br />
+    This app is deployed on Heroku
 
   ## Acceptance Criteria
 
@@ -61,7 +66,7 @@ THEN I am logged out of the site and presented with a menu with the options Sear
 
   ## Deployed App:<br /> 
   [Launched App]()
-  ![Site Image](https://github.com/LuisChevere/portfolio-react/blob/main/public/launchsite.png?raw=true)
+  ![Site Image]()
 
   ## Contributions
   - Luis Chevere: [@LuisChevere](https://github.com/LuisChevere) - Github
